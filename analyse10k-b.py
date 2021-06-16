@@ -26,6 +26,7 @@ def locatese(file):
         index = 0
         indexlist = []
         start = 0
+        attrib_list = list()
         for unit in mainlist:
             index += 1
             for tags in unit.findall('.//'):  #decompose child elements          
@@ -34,6 +35,13 @@ def locatese(file):
                     if unit.text!=None:
                         if re.findall(r"subsequent event|subsequent events", unit.text.lower()): # spelling tolerance
                             start = index
+                # Trace back ancestors
+                attrib = ''
+                for ancestors in tags.xpath('ancestor-or-self::*'):
+                    attrib = attrib + str(ancestors.attrib) + ','
+                attrib_list.append(attrib)
+
+
 
         startpos = indexlist.index(start)
         end = indexlist[startpos+1]
