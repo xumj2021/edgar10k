@@ -22,12 +22,13 @@ def locatese(file):
         indexlist = []
         for unit in mainlist:
             index += 1
-            values = ", ".join(unit.values())
+            for tags in unit.findall('.//'): #not sure whether element.values will also extract all descendant... remove this if it does
+                values = values + ',' + ", ".join(tags.values())
             if re.findall("bold", values):
                 indexlist.append(index)
                 if unit.text:
                     content = " ".join(unit.itertext()).lower()
-                    if re.findall("subsequent event", content):
+                    if re.findall(r"subsequent event|subsequent events", content,flags=re.IGNORECASE): #different spellings and case unsensitive
                         start = index
 
         startpos = indexlist.index(start)

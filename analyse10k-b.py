@@ -28,11 +28,12 @@ def locatese(file):
         start = 0
         for unit in mainlist:
             index += 1
-            if unit.xpath("name()") == "b":
-                indexlist.append(index)
-                if unit.text!=None:
-                    if re.findall("subsequent event", unit.text.lower()):
-                        start = index
+            for tags in unit.findall('.//'):  #decompose child elements          
+                if tags.xpath("name()") == "b" or tags.xpath("name()") == "bold":
+                    indexlist.append(index)
+                    if unit.text!=None:
+                        if re.findall(r"subsequent event|subsequent events", unit.text.lower()): # spelling tolerance
+                            start = index
 
         startpos = indexlist.index(start)
         end = indexlist[startpos+1]
