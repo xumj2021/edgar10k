@@ -26,13 +26,22 @@ def locatese(file):
         index = 0
         indexlist = []
         start = 0
+        attrib_list = list()
         for unit in mainlist:
             index += 1
-            if unit.xpath("name()") == "b":
-                indexlist.append(index)
-                if unit.text!=None:
-                    if re.findall("subsequent event", unit.text.lower()):
-                        start = index
+            for tags in unit.findall('.//'):  #decompose child elements          
+                if tags.xpath("name()") == "b" or tags.xpath("name()") == "bold":
+                    indexlist.append(index)
+                    if unit.text!=None:
+                        if re.findall(r"subsequent event|subsequent events", unit.text.lower()): # spelling tolerance
+                            start = index
+                # Trace back ancestors
+                attrib = ''
+                for ancestors in tags.xpath('ancestor-or-self::*'):
+                    attrib = attrib + str(ancestors.attrib) + ','
+                attrib_list.append(attrib)
+
+
 
         startpos = indexlist.index(start)
         end = indexlist[startpos+1]
